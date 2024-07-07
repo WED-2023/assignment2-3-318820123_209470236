@@ -5,7 +5,10 @@ const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcrypt");
 
 router.post("/Register", async (req, res, next) => {
+  console.log("ddddddd attempt:", req.body);
   try {
+    console.log("Register attempt:", req.body);
+
     // parameters exists
     // valid parameters
     // username exists
@@ -18,23 +21,32 @@ router.post("/Register", async (req, res, next) => {
       email: req.body.email,
       profilePic: req.body.profilePic
     }
+    console.log("User details:", user_details);
+
     let users = [];
     users = await DButils.execQuery("SELECT username from users");
+    console.log("Existing users:", users);
 
-    if (users.find((x) => x.username === user_details.username))
+    if (users.find((x) => x.username === user_details.username)){
+      console.log("Username taken");
+
       throw { status: 409, message: "Username taken" };
-
+    }
     // add the new username
     let hash_password = bcrypt.hashSync(
       user_details.password,
       parseInt(process.env.bcrypt_saltRounds)
     );
+    console.log("Hashed password:", hash_password);
+
+
     await DButils.execQuery(
       `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
       '${user_details.country}', '${hash_password}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
+    console.error("Error in Register:", error);
     next(error);
   }
 });

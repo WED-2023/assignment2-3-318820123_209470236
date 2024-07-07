@@ -79,7 +79,9 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 // Routings
 app.use("/users", user);
 app.use("/recipes", recipes);
-app.use(auth);
+// app.use(auth);
+	
+app.use("/auth", auth);
 
 // Default router
 app.use(function (err, req, res, next) {
@@ -90,6 +92,7 @@ app.use(function (err, req, res, next) {
 
 
 const server = app.listen(port, () => {
+  // console.log(process.env);
   console.log(`Server listen on port ${port}`);
 });
 
