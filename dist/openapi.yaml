@@ -71,6 +71,7 @@ paths:
         "200":
           description: "the user has ben successfully logged out"
   /users/favorites:
+  
     get:
       tags:
       - Users
@@ -89,6 +90,21 @@ paths:
           description: user is not authorized
       # security:
       # - cookieAuth: []
+    delete:
+      tags:
+      - Users
+      summary: delete recipe from the favorites list of a user
+      description: delete recipe from the favorites list of a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reciepeId:
+                  type: string
+                  description: reciepe's id which the user deletes
+                  example: 716429
     post:
       tags:
       - Users
