@@ -125,12 +125,38 @@ async function getRandomRecipes(number, includeTags, excludeTags) {
     }
 }
 
+/**
+ * Get preview information for a list of recipes
+ * @param {*} recipe_ids 
+ */
+async function getRecipesPreview(recipe_ids) {
+    try {
+        const promises = recipe_ids.map(id => getRecipeInformation(id));
+        const recipes = await Promise.all(promises);
+        return recipes.map(recipe => {
+            const { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe;
+            return {
+                id,
+                title,
+                readyInMinutes,
+                image,
+                popularity: aggregateLikes,
+                vegan,
+                vegetarian,
+                glutenFree
+            };
+        });
+    } catch (error) {
+        console.error('Error fetching recipes preview:', error);
+        throw error;
+    }
+}
 
 
 exports.getRecipeDetails = getRecipeDetails;
 exports.searchRecipe = searchRecipe;
 exports.getRandomRecipes = getRandomRecipes;
-
+exports.getRecipesPreview = getRecipesPreview;
 
 
 
