@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+var mysql = require('mysql2');
 require("dotenv").config();
 
 const config = {
@@ -7,11 +7,11 @@ const config = {
   user: process.env.user || "root",
   password: process.env.password || "Lior!209470236",
   database: process.env.database || "mydb",
-  port: process.env.port || 3306,
-  connectTimeout: 60000 // הגדרת זמן קצוב ל-60 שניות
+  port: process.env.port || 3306
+  //connectTimeout: 20000 // הגדרת זמן קצוב ל-60 שניות
 };
 
-const pool = mysql.createPool(config);
+const pool = new mysql.createPool(config);
 
 const connection = () => {
   return new Promise((resolve, reject) => {

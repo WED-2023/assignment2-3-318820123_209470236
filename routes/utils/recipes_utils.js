@@ -10,12 +10,14 @@ const api_domain = "https://api.spoonacular.com/recipes";
 
 
 async function getRecipeInformation(recipe_id) {
-    return await axios.get(`${api_domain}/${recipe_id}/information`, {
-        params: {
-            includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
-        }
-    });
+        const response = await axios.get(`${api_domain}/${recipe_id}/information`, {
+            params: {
+                includeNutrition: true,
+                // apiKey:`b06757c88bbf4f2b83293f95845f3e1f`
+                apiKey: process.env.spoonacular_apiKey
+            }
+        });
+    //     console.log("Hashed password:", response);
 }
 
 
@@ -46,12 +48,42 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number, user
             intolerances: intolerance,
             number: number,
             apiKey: process.env.spooncular_apiKey
+            // apiKey:`b06757c88bbf4f2b83293f95845f3e1f`
         }
     });
 
     return getRecipesPreview(response.data.results.map((element) => element.id), username);
 }
 
+
+
+
+// async function getRandomRecipes(number) {
+//     const response = await axios.get(`${api_domain}/Random`, {
+//         params: {
+//             number: number,
+//             // apiKey: process.env.spooncular_apiKey
+//             apiKey:b06757c88bbf4f2b83293f95845f3e1f
+//             }
+//     });
+
+//     return response.data.recipes.map(recipe => ({
+//         id: recipe.id,
+//         title: recipe.title,
+//         readyInMinutes: recipe.readyInMinutes,
+//         image: recipe.image,
+//         popularity: recipe.aggregateLikes,
+//         vegan: recipe.vegan,
+//         vegetarian: recipe.vegetarian,
+//         glutenFree: recipe.glutenFree
+//     }));
+// }
+
+// module.exports = {
+//     getRecipeDetails,
+//     searchRecipe,
+//     getRandomRecipes // Export the new function
+// };
 
 
 exports.getRecipeDetails = getRecipeDetails;
