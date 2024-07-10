@@ -255,7 +255,7 @@ paths:
           description: user is not authorized
       # security:
       # - cookieAuth: []                
-  /recipes/{recipeId}:
+  /recipes/recipe/{recipeId}:
     get:
       tags:
       - Recipes
