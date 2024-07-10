@@ -69,4 +69,106 @@ router.delete('/favorites', async (req, res, next) => {
 });
 
 
+/**
+ * This path saves a recipe as "last seen" for the logged-in user
+ */
+router.post('/watched', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const recipe_id = req.body.recipeId;
+    await user_utils.markAsWatched(username, recipe_id);
+    res.status(200).send("The Recipe successfully marked as watched");
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * This path returns the last watched recipes that were saved by the logged-in user
+ */
+router.get('/lastWatchedRecipes', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const recipes_id = await user_utils.getLastWatchedRecipes(username);
+    let recipes_id_array = recipes_id.map((element) => element.recipe_id); // extracting the recipe ids into an array
+    const results = await recipe_utils.getRecipesPreview(recipes_id_array);
+    res.status(200).send(results);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * This path checks if the recipe has been watched by the logged-in user
+ */
+router.post('/isWatched', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const recipe_id = req.body.recipeId;
+    const watched = await user_utils.isWatched(username, recipe_id);
+    res.status(200).send({ watched });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * This path checks if the recipe is favorite for the logged-in user
+ */
+router.post('/isFavorite', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const recipe_id = req.body.recipeId;
+    const favorite = await user_utils.isFavorite(username, recipe_id);
+    res.status(200).send({ favorite });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+/**
+ * This path creates a new recipe
+ */
+router.post('/createARecipe', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const { title, imageUrl, preparation_time, vegan, vegetarian, gluten_free, ingredients, instructions, servings } = req.body;
+    await user_utils.createRecipe(username, title, imageUrl, preparation_time, vegan, vegetarian, gluten_free, ingredients, instructions, servings);
+    res.status(201).send("The Recipe successfully created");
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * This path returns the recipes created by the logged-in user
+ */
+router.get('/userRecipes', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const userRecipes = await user_utils.getUserRecipes(username);
+    res.status(200).send(userRecipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * This path returns the family recipes that were saved by the logged-in user
+ */
+router.get('/myFamilyRecipes', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const familyRecipes = await user_utils.getFamilyRecipes(username);
+    res.status(200).send(familyRecipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+
 module.exports = router;
