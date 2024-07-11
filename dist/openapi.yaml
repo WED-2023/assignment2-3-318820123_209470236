@@ -214,6 +214,39 @@ paths:
           description: user is not authorized          
       # security:
       # - cookieAuth: []
+  /users/deleteRecipe:
+    delete:
+      tags:
+      - Users
+      summary: Delete a recipe created by the user
+      description: Delete a specific recipe created by the user based on username and recipe title
+      parameters:
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+          description: The username of the user who created the recipe
+        - in: query
+          name: title
+          required: true
+          schema:
+            type: string
+          description: The title of the recipe to be deleted
+      responses:
+        "200":
+          description: The recipe was successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        "401":
+          description: User is not authorized
   /users/myFamilyRecipes:
     get:
       tags:

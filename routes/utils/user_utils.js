@@ -84,6 +84,14 @@ async function getFamilyRecipes(username) {
         throw error;
     }
 }
+async function deleteRecipe(username, title) {
+    try {
+        await DButils.execQuery(`DELETE FROM recipebyuser WHERE username='${username}' AND title='${title}'`);
+    } catch (error) {
+        console.error(`Error deleting recipe for user ${username} with title ${title}:`, error);
+        throw error;
+    }
+}
 
 // Export functions
 exports.markAsFavorite = markAsFavorite;
@@ -96,3 +104,4 @@ exports.isFavorite = isFavorite;
 exports.createRecipe = createRecipe;
 exports.getUserRecipes = getUserRecipes;
 exports.getFamilyRecipes = getFamilyRecipes;
+exports.deleteRecipe = deleteRecipe;

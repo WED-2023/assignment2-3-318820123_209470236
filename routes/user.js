@@ -170,7 +170,25 @@ router.get('/myFamilyRecipes', async (req, res, next) => {
   }
 });
 
+/**
+ * This path deletes a recipe created by the user based on username and recipe title
+ */
+router.delete('/deleteRecipe', async (req, res, next) => {
+  try {
+    const { title } = req.query;
+    const username = req.session.username;
 
+    if (!username || !title) {
+      return res.status(400).send({ success: false, message: "Username and title are required" });
+    }
+
+    await user_utils.deleteRecipe(username, title);
+    res.status(200).send({ success: true, message: "Recipe deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting recipe:", error);
+    next(error);
+  }
+});
 
 
 module.exports = router;

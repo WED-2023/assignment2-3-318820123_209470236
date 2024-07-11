@@ -23,7 +23,7 @@ router.get("/search", async (req, res, next) => {
 /**
  * This path returns a full details of a recipe by its id
  */
-router.get("/recipe/:recipeId", async (req, res, next) => {
+router.get("/:recipeId", async (req, res, next) => {
   try {
     const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
     res.send(recipe);
@@ -36,7 +36,7 @@ router.get("/recipe/:recipeId", async (req, res, next) => {
 /**
  * This path is for getting random recipes
  */
-router.get("/random", async (req, res, next) => {
+router.get("/recipe/random", async (req, res, next) => {
   try {
     const number = req.query.number || 1;
     const includeTags = req.query['include-tags'] ? req.query['include-tags'].split(',') : [];
