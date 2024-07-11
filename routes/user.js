@@ -8,8 +8,10 @@ const recipe_utils = require("./utils/recipes_utils");
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
+  console.log(req.session.username);
   if (req.session && req.session.username) {
     DButils.execQuery("SELECT username FROM users").then((users) => {
+      console.log(req.session.username)
       if (users.find((x) => x.username === req.session.username)) {
         req.username = req.session.username;
         next();

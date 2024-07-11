@@ -6,10 +6,15 @@ var logger = require("morgan");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 var cors = require('cors')
+var bodyParser = require('body-parser');
 
 var app = express();
 app.use(logger("dev")); //logger
 app.use(express.json()); // parse application/json
+
+// app.use(bodyParser.json({ limit: '40mb' })); // Adjust the limit as needed
+// app.use(bodyParser.urlencoded({ limit: '40mb', extended: true })); // Adjust the limit as needed
+
 app.use(
   session({
     cookieName: "session", // the cookie key name
@@ -42,7 +47,8 @@ app.get("/",function(req,res)
 // app.options("*", cors());
 
 const corsConfig = {
-  origin: true,
+  // origin: true,
+  origin: 'http://localhost:8080',
   credentials: true
 };
 
@@ -58,19 +64,22 @@ const auth = require("./routes/auth");
 
 //#region cookie middleware
 app.use(function (req, res, next) {
+  console.log("Session username middleware:", req.session.username);
   if (req.session && req.session.username) {
     DButils.execQuery("SELECT username FROM users")
       .then((users) => {
         if (users.find((x) => x.username === req.session.username)) {
           req.username = req.session.username;
+          next();
         }
-        next();
+        
       })
       .catch((error) => next());
   } else {
     next();
   }
 });
+
 //#endregion
 
 // ----> For cheking that our server is alive
