@@ -7,10 +7,10 @@ const api_domain = "https://api.spoonacular.com/recipes";
  */
 async function getRecipeInformation(recipe_id) {
     try {
-        const response = await axios.get(`${api_domain}/${recipe_id}/information`, {
+        const response = await axios.get(`${api_domain}/${recipe_id}/information?includeNutrition=true`, {
             params: {
                 includeNutrition: true,
-                apiKey: process.env.spoonacular_apiKey || `b06757c88bbf4f2b83293f95845f3e1f`
+                apiKey: process.env.spoonacular_apiKey || `3d40100fe4bb4612bbbefd33819154fc`
             }
         });
         if (response && response.data) {
@@ -28,7 +28,7 @@ async function getRecipeInformation(recipe_id) {
  * Extract the relevant recipe data for preview
  * @param {*} recipe_id 
  */
-async function getRecipeDetails(recipe_id) {
+async function getRecipePreviewDetails(recipe_id) {
     try {
         let recipe_info = await getRecipeInformation(recipe_id);
         let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info;
@@ -42,6 +42,39 @@ async function getRecipeDetails(recipe_id) {
             vegan: vegan,
             vegetarian: vegetarian,
             glutenFree: glutenFree,
+        };
+    } catch (error) {
+        console.error(`Error getting recipe details for ID ${recipe_id}:`, error);
+        throw error;
+    }
+}
+
+/**
+ * Extract the relevant recipe data for preview
+ * @param {*} recipe_id 
+ */
+async function getRecipeDetails(recipe_id) {
+    try {
+        let recipe_info = await getRecipeInformation(recipe_id);
+        let {
+            id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,
+            summary, analyzedInstructions, instructions, extendedIngredients, servings
+        } = recipe_info;
+
+        return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            image: image,
+            aggregateLikes: aggregateLikes,
+            vegetarian: vegetarian,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            summary: summary,
+            analyzedInstructions: analyzedInstructions,
+            instructions: instructions,
+            extendedIngredients: extendedIngredients,
+            servings: servings
         };
     } catch (error) {
         console.error(`Error getting recipe details for ID ${recipe_id}:`, error);
@@ -66,13 +99,14 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
                 diet: diet,
                 intolerances: intolerance,
                 number: number,
-                apiKey: `b06757c88bbf4f2b83293f95845f3e1f`
+                // apiKey: `b06757c88bbf4f2b83293f95845f3e1f`
+                apiKey: `3d40100fe4bb4612bbbefd33819154fc`
             }
         });
 
         if (response && response.data && response.data.results) {
             const recipesDetails = await Promise.all(response.data.results.map(recipe => 
-                getRecipeDetails(recipe.id)));
+                getRecipePreviewDetails(recipe.id)));
             return recipesDetails;
         } else {
             throw new Error('No results in response');
@@ -97,7 +131,8 @@ async function getRandomRecipes(number, includeTags, excludeTags) {
                 number: number,
                 tags: includeTags.join(','),
                 excludeTags: excludeTags.join(','),
-                apiKey: `b06757c88bbf4f2b83293f95845f3e1f`
+                // apiKey: `b06757c88bbf4f2b83293f95845f3e1f`
+                apiKey: `3d40100fe4bb4612bbbefd33819154fc`
             }
         });
         

@@ -18,7 +18,7 @@ async function markAsWatched(username, recipe_id) {
     await DButils.execQuery(`INSERT INTO LastSeenRecipes (username, recipe_id, seen_at) VALUES ('${username}', ${recipe_id}, CURRENT_TIMESTAMP)`);
 }
 
-async function getLastWatchedRecipes(username, limit = 3) {
+async function getLastWatchedRecipes(username, limit = 5) {
     try {
         const recipes = await DButils.execQuery(
             `SELECT recipe_id FROM LastSeenRecipes WHERE username='${username}' ORDER BY seen_at DESC LIMIT ${limit}`
