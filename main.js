@@ -1,3 +1,4 @@
+//main.js server
 require("dotenv").config();
 //#region express configures
 var express = require("express");
@@ -48,14 +49,15 @@ app.get("/",function(req,res)
 
 const corsConfig = {
   // origin: true,
-  origin: 'http://localhost:8080',
+  origin: 'https://liors-recipes.cs.bgu.ac.il',
+  // origin: 'http://localhost:8080',
   credentials: true
 };
 
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
 
-var port = process.env.PORT || "80"; //local=3000 remote=80
+var port = process.env.PORT || "443"//"80"; //local=3000 remote=80
 //#endregion
 const user = require("./routes/user");
 const recipes = require("./routes/recipes");
@@ -64,15 +66,15 @@ const auth = require("./routes/auth");
 
 //#region cookie middleware
 app.use(function (req, res, next) {
-  // console.log("Session username middleware:", req.session.username);
+  console.log("Session username middleware:", req.session.username);
   if (req.session && req.session.username) {
     DButils.execQuery("SELECT username FROM users")
       .then((users) => {
         if (users.find((x) => x.username === req.session.username)) {
           req.username = req.session.username;
-          next();
+          
         }
-        
+        next();
       })
       .catch((error) => next());
   } else {

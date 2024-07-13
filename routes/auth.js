@@ -1,3 +1,4 @@
+//auth.js server:
 var express = require("express");
 var router = express.Router();
 const MySql = require("../routes/utils/MySql");
@@ -69,16 +70,14 @@ router.post("/Register", async (req, res, next) => {
 
     if (users.find((x) => x.username === user_details.username)){
       console.log("Username taken");
-
       throw { status: 409, message: "Username taken" };
     }
     // add the new username
-    let hash_password = bcrypt.hashSync(
-      user_details.password,
+    let hash_password = bcrypt.hashSync(user_details.password,
       //parseInt(process.env.bcrypt_saltRounds)
       parseInt(8)
     );
-    console.log("Hashed password:", hash_password);
+    // console.log("Hashed password:", hash_password);
 
 
     await DButils.execQuery(
@@ -127,7 +126,6 @@ router.post("/Login", async (req, res, next) => {
 
     // Set cookie
     req.session.username = user.username;
-    console.log(req.session.username);
     // Return success response
     res.status(200).send({ message: "Login succeeded", success: true });
   } catch (error) {
