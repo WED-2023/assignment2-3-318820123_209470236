@@ -8,7 +8,7 @@ const config = {
   user: "root",//process.env.user || 
   password: "Lior!209470236",//process.env.password || 
   database: "mydb", //process.env.database || 
-  port: 443 //process.env.port || //3306
+  port: 3306 //process.env.port || //3306
   //connectTimeout: 20000 // הגדרת זמן קצוב ל-60 שניות
 };
 
